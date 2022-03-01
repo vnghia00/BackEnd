@@ -2,7 +2,7 @@ import db from '../models/index'
 
 const getHomePage = async (req, res) => {
     try {
-        const data = await db.User.findAll()
+        const data = await db.users.findAll()
         return res.render('homepage.ejs', {
             data: JSON.stringify(data)
         })

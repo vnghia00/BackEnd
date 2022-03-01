@@ -20,7 +20,7 @@ connectDB()
 const port = process.env.PORT || 3000
 
 app.listen(port, () => {
-    console.log(`Backend Nodejs is runing on the port : http://localhost:${port}`);
+    console.log(`*** Backend Nodejs is runing on the port : http://localhost:${port}`);
 })
 
 
