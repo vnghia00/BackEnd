@@ -1,4 +1,5 @@
 import db from '../models/index'
+import CRUDSevice from '../services/CRUDSevice'
 
 const getHomePage = async (req, res) => {
     try {
@@ -13,11 +14,18 @@ const getHomePage = async (req, res) => {
 }
 
 
-const getLoginPage = (req, res) => {
-    return res.render('log/login.ejs')
+const getSigupPage = (req, res) => {
+    return res.render('sigup.ejs')
+}
+
+const postCRUD = async (req, res) => {
+    const message = await CRUDSevice.createNewUser(req.body)
+    console.log(message)
+    return res.send('CRUD')
 }
 
 module.exports = {
     getHomePage: getHomePage,
-    getLoginPage: getLoginPage,
+    getSigupPage: getSigupPage,
+    postCRUD: postCRUD,
 }

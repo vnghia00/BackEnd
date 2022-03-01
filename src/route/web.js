@@ -5,8 +5,9 @@ const router = express.Router()
 
 const initWebRoutes = (app) => {
     router.get('/', homeController.getHomePage)
+    router.get('/sigup', homeController.getSigupPage)
+    router.post('/post-crud', homeController.postCRUD)
 
-    router.get('/login', homeController.getLoginPage)
 
 
     return app.use("/", router)
