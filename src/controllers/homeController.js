@@ -21,11 +21,19 @@ const getSigupPage = (req, res) => {
 const postCRUD = async (req, res) => {
     const message = await CRUDSevice.createNewUser(req.body)
     console.log(message)
-    return res.send('CRUD')
+    return res.send('post CRUD')
+}
+
+const getCRUD = async (req, res) => {
+    const data = await CRUDSevice.getAllUser()
+    return res.render('getCRUD.ejs', {
+        dataTable: data,
+    })
 }
 
 module.exports = {
     getHomePage: getHomePage,
     getSigupPage: getSigupPage,
     postCRUD: postCRUD,
+    getCRUD: getCRUD,
 }
