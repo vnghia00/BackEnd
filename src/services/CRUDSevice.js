@@ -14,7 +14,6 @@ const hashUserPassword = (password) => {
     })
 }
 
-
 const createNewUser = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -47,7 +46,6 @@ const getAllUser = () => {
             reject(e)
         }
     })
-
 }
 
 const getUserInfoById = (userId) => {
@@ -57,7 +55,6 @@ const getUserInfoById = (userId) => {
                 where: { id: userId },
                 raw: true,
             })
-
             if (user) {
                 resolve(user)
             } else {
@@ -76,13 +73,11 @@ const updateUserData = (data) => {
             const user = await db.users.findOne({
                 where: { id: data.id },
             })
-
             if (user) {
                 user.fullName = data.fullName
                 user.phoneNumber = data.phoneNumber
                 user.address = data.address
                 user.gender = data.gender
-
                 await user.save();
 
                 const newAllUser = await db.users.findAll({
@@ -93,17 +88,32 @@ const updateUserData = (data) => {
             } else {
                 resolve()
             }
-
         } catch (e) {
             reject(e)
         }
     })
 }
 
+const deleteUser = (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const user = await db.users.findOne({
+                where: { id: userId },
+            })
+            if (user) {
+                await user.destroy()
+            }
+            resolve()
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 
 module.exports = {
     createNewUser: createNewUser,
     getAllUser: getAllUser,
     getUserInfoById: getUserInfoById,
     updateUserData: updateUserData,
+    deleteUser: deleteUser
 }

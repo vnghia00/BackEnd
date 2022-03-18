@@ -13,7 +13,6 @@ const getHomePage = async (req, res) => {
     }
 }
 
-
 const getSigupPage = (req, res) => {
     return res.render('signUp.ejs')
 }
@@ -21,7 +20,7 @@ const getSigupPage = (req, res) => {
 const postSignUp = async (req, res) => {
     const message = await CRUDSevice.createNewUser(req.body)
     console.log(message)
-    return res.send('post CRUD')
+    return res.send(message)
 }
 
 const getUser = async (req, res) => {
@@ -55,6 +54,19 @@ const putEditUser = async (req, res) => {
     }
 }
 
+const deleteUser = async (req, res) => {
+    const userId = req.query.id
+    if (userId) {
+        await CRUDSevice.deleteUser(userId)
+        const data = await CRUDSevice.getAllUser()
+        return res.render('getUser.ejs', {
+            dataTable: data,
+        })
+    } else {
+        return res.send('aaaaaaaaaaaaaaaa')
+    }
+}
+
 module.exports = {
     getHomePage: getHomePage,
     getSigupPage: getSigupPage,
@@ -62,4 +74,5 @@ module.exports = {
     getUser: getUser,
     editUser: editUser,
     putEditUser: putEditUser,
+    deleteUser: deleteUser,
 }
