@@ -99,6 +99,7 @@ const deleteUser = (userId) => {
         try {
             const user = await db.users.findOne({
                 where: { id: userId },
+                raw: false,
             })
             if (user) {
                 await user.destroy()

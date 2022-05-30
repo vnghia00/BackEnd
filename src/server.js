@@ -11,7 +11,6 @@ dotenv.config()
 const port = process.env.PORT || 3001
 const portClient = process.env.PORT_CLIENT || 3000
 
-
 const app = express()
 
 const corsOptions = {

@@ -38,11 +38,11 @@ const handleUserLogin = (email, password) => {
                     userData.user = user
                 } else {
                     userData.errCode = 3
-                    userData.message = "Wrong password"
+                    userData.errMessage = "Wrong password"
                 }
             } else {
                 userData.errCode = 1
-                userData.message = "Your's Email isn't exist"
+                userData.errMessage = "Your's Email isn't exist"
             }
             resolve(userData)
         } catch (e) {
@@ -96,26 +96,28 @@ const createNewUser = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
             const checkEmail = await checkUserEmail(data.email)
-            if (checkEmail) {
+            if (checkEmail === true) {
                 resolve({
                     errCode: 1,
-                    message: 'Your email is already in used, Plz try another email!'
+                    errMessage: 'Your email is already in used, Plz try another email!'
                 })
             }
-            const hashPasswordFromBcrypt = await hashUserPassword(data.password)
-            await db.users.create({
-                email: data.email,
-                password: hashPasswordFromBcrypt,
-                fullName: data.fullName,
-                phoneNumber: data.phoneNumber,
-                address: data.address,
-                gender: data.gender === '1' ? true : false,
-                roleId: data.roleId,
-            })
-            resolve({
-                errCode: 0,
-                message: 'OK Create a new user succeed!'
-            })
+            else {
+                const hashPasswordFromBcrypt = await hashUserPassword(data.password)
+                await db.users.create({
+                    email: data.email,
+                    password: hashPasswordFromBcrypt,
+                    fullName: data.fullName,
+                    phoneNumber: data.phoneNumber,
+                    address: data.address,
+                    gender: data.gender,
+                    roleId: data.roleId,
+                })
+                resolve({
+                    errCode: 0,
+                    message: 'OK Create a new user succeed!'
+                })
+            }
         } catch (e) {
             reject(e)
         }
@@ -135,6 +137,7 @@ const updateUser = (data) => {
                 user.phoneNumber = data.phoneNumber || user.phoneNumber
                 user.address = data.address || user.address
                 user.gender = data.gender || user.gender
+                user.roleId = data.roleId || user.roleId
                 await user.save()
                 resolve({
                     errCode: 0,
@@ -160,7 +163,6 @@ const deleteUser = (id) => {
                 where: { id: id },
                 raw: false,
             })
-            console.log(user);
             if (!user) {
                 resolve({
                     errCode: 2,
@@ -178,10 +180,41 @@ const deleteUser = (id) => {
     })
 }
 
+const getAllcodesService = (typeInput) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!typeInput) {
+                resolve({
+                    errCode: 1,
+                    errMessage: `Missing required parameters!`
+                })
+            } else {
+                const allcodes = await db.allcodes.findAll({
+                    where: { type: typeInput },
+                })
+                if (allcodes.length === 0) {
+                    resolve({
+                        errCode: 2,
+                        errMessage: `The typeInput isn't exist!`
+                    })
+                } else {
+                    resolve({
+                        errCode: 0,
+                        message: 'OK get allcodes succeed!',
+                        data: allcodes
+                    })
+                }
+            }
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 module.exports = {
     handleUserLogin: handleUserLogin,
     getAllUsers: getAllUsers,
     createNewUser: createNewUser,
     updateUser: updateUser,
     deleteUser: deleteUser,
+    getAllcodesService: getAllcodesService,
 }

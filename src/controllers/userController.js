@@ -7,7 +7,7 @@ const handleLogin = async (req, res) => {
     if (!email || !password) {
         return res.status(500).json({
             errCode: 1,
-            message: 'Missing inputs parameter!',
+            errMessage: 'Missing inputs parameter!',
         })
     }
     const userData = await userSevice.handleUserLogin(email, password)
@@ -20,11 +20,10 @@ const handleLogin = async (req, res) => {
 }
 const handleGetAllUsers = async (req, res) => {
     const id = req.query.id
-
     if (!id) {
         return res.status(200).json({
             errCode: 1,
-            message: 'Missing repuired parameters',
+            errMessage: 'Missing repuired parameters',
             users: []
         })
     }
@@ -61,10 +60,23 @@ const handleDeleteUser = async (req, res) => {
     const message = await userSevice.deleteUser(req.body.id)
     return res.status(200).json(message)
 }
+
+const getAllcodes = async (req, res) => {
+    if (!req.query.type) {
+        return res.status(200).json({
+            errCode: 1,
+            errMessage: "Missing required parameters!"
+        })
+    }
+    const data = await userSevice.getAllcodesService(req.query.type)
+    return res.status(200).json(data)
+}
+
 module.exports = {
     handleLogin: handleLogin,
     handleGetAllUsers: handleGetAllUsers,
     handleCreateNewUser: handleCreateNewUser,
     handleEditUser: handleEditUser,
     handleDeleteUser: handleDeleteUser,
+    getAllcodes: getAllcodes,
 }
